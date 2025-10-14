@@ -1,0 +1,18 @@
+@startuml
+' Requisitos funcionais (RF)
+requirement "RF01: Carregar arquivo .bib" as RF01
+requirement "RF02: Buscar dados pela query" as RF02
+requirement "RF03: Exibir dados no console" as RF03
+requirement "RF04: Esportar resultados" as RF04
+
+' Requisitos não funcionais (RNF)
+requirement "RNF01: Detectar automaticamente a base de dados" as RNF01
+requirement "RNF02: Processar os dados e tratar" as RNF02
+requirement "RNF03: Resultados exibidos em uma tabela exel" as RNF03
+
+
+RF01 --> RNF01
+RF01 --> RNF02
+RF04 --> RNF03
+
+@enduml
