@@ -1,0 +1,26 @@
+@startuml
+
+actor Usuario as U
+
+rectangle "BibSync" {
+    usecase "UC01 - Carregar arquivo .bib" as UC01
+    usecase "UC02 - Detectar a base de dados" as UC02
+    usecase "UC03 -  Processar e tratas os dados" as UC03
+    usecase "UC04 - Buscar dados pela query" as UC04
+    usecase "UC05 - Exibir dado no console" as UC05
+    usecase "UC06 -  Exportar resultados" as UC06
+    usecase "UC07 - Exportar os dados em exel" as UC07
+}
+
+' Relações do ator
+U --> UC01
+U --> UC04
+U --> UC06
+
+' Casos internos
+UC01 --> UC02 : <<includes>>
+UC02 --> UC03 : <<includes>>
+UC04 --> UC05 : <<includes>>
+UC06 --> UC07 : <<includes>>
+
+@enduml

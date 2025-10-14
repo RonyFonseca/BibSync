@@ -1,7 +1,33 @@
 @startuml BibSync
 
-class teste {
-
+class Main {
+    + main (args: String[])
 }
+
+class BibEntry {
+    - autor: String
+    - titulo: String
+    - resumo: String
+    - ano: String
+    + getAutor(): String
+    + setAutor(String)
+    + getTitulo(): String
+    + setTitulo(String)
+    + getResumo(): String
+    + setResumo(String)
+}
+
+class MenuConsole {
+    + menuPrincipal(): String
+}
+
+class Factory {}
+
+class Strategy {}
+
+Main --> MenuConsole
+MenuConsole --> BibEntry
+BibEntry --> Factory
+BibEntry --> Strategy
 
 @enduml

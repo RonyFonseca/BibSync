@@ -3,7 +3,7 @@
 requirement "RF01: Carregar arquivo .bib" as RF01
 requirement "RF02: Buscar dados pela query" as RF02
 requirement "RF03: Exibir dados no console" as RF03
-requirement "RF04: Esportar resultados" as RF04
+requirement "RF04: Exportar resultados" as RF04
 
 ' Requisitos não funcionais (RNF)
 requirement "RNF01: Detectar automaticamente a base de dados" as RNF01
