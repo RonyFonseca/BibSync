@@ -1,0 +1,7 @@
+@startuml BibSync
+
+class teste {
+
+}
+
+@enduml
