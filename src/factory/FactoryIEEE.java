@@ -11,7 +11,7 @@ public class FactoryIEEE implements Factory {
     @Override
     public List<model.Bib> lerArquivo() {
         System.out.println("Lendo arquivo da IEEE");
-        List<model.Bib> artigos = bibservices.tratarBib();
+        List<model.Bib> artigos = bibservices.importarBibs();
         return artigos;
     }
 

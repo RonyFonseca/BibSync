@@ -12,7 +12,7 @@ public class FactoryMDPI implements Factory {
     @Override
     public List<model.Bib> lerArquivo() {
         System.out.println("Lendo arquivo MDPI");
-        List<model.Bib> artigos = bibservices.tratarBib();
+        List<model.Bib> artigos = bibservices.importarBibs();
         return artigos;
     }
 

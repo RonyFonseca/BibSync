@@ -2,10 +2,7 @@ package servirces;
 
 import model.Bib;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,21 +42,35 @@ public class BibServices {
         }
     }
 
-    public List<Bib> tratarBib(){
-        try{
-            BufferedReader arquivo = new BufferedReader(new FileReader(path+"\\"+tipo+".bib"));
+    public void identificarTipoBib(){
+        File pasta = new File(path);
 
-            int quanidadeDeLinhas = percorerLinhasBib();
+        File[] arquivos = pasta.listFiles((dir, name) -> name.endsWith(".bib"));
 
-            return lerLinhasBib(quanidadeDeLinhas);
-
-        }catch (IOException e){
-            System.out.println("Erro ao tratar "+e);
+        for (File arquivo : arquivos) {
+            try {
+                BufferedReader file = new BufferedReader(new FileReader(path+"\\"+arquivo.getName()));
+                if(file.readLine().contains("@IN")){
+                    System.out.println(arquivo.getName()+" - IEEE");
+                }else {
+                    System.out.println(arquivo.getName()+" - MDPI");
+                }
+            } catch (IOException e) {
+                System.out.println("Erro ao indentificar o tipo: "+ e);;
+            }
         }
-        return List.of();
+
     }
 
-    public int percorerLinhasBib(){
+    public List<Bib> importarBibs(){
+
+        int quanidadeDeLinhas = percorerLinhasBib();
+
+        return tratarLinhasBib(quanidadeDeLinhas);
+
+    }
+
+    private int percorerLinhasBib(){
         try{
             BufferedReader arquivo = new BufferedReader(new FileReader(path+"\\"+tipo+".bib"));
 
@@ -79,7 +90,7 @@ public class BibServices {
         return 0;
     }
 
-    public List<Bib> lerLinhasBib(int quantidadeLinhas){
+    public List<Bib> tratarLinhasBib(int quantidadeLinhas){
         try{
             BufferedReader arquivo = new BufferedReader(new FileReader(path+"\\"+tipo+".bib"));
 

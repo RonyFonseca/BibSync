@@ -1,22 +1,23 @@
-package menu;
+package view;
 
 import java.util.Scanner;
 
-public class Menus {
+public class MenusView {
     private Scanner sc;
 
-    public Menus(){
+    public MenusView(){
         this.sc = new Scanner(System.in);
     }
 
-    public int menuDeImportacaoBib(){
+
+    public int menuPrincipal(){
         int opc = -1;
 
         do{
-            System.out.println("========[.bib]========");
+            System.out.println("========[HOME]========");
             System.out.println("[1]-Importar Base");
-            System.out.println("[2]-Listar Bases Importadas");
-            System.out.println("[3]-Remover Base");
+            System.out.println("[2]-Analisar dados");
+            System.out.println("[3]-Log");
             System.out.println();
             System.out.println("[0]-Sair");
             System.out.println("======================");
@@ -65,6 +66,26 @@ public class Menus {
 
         }while(opc!=0);
     }
+
+    public int menuDeImportacaoBib(){
+        int opc = -1;
+
+        do{
+            System.out.println("========[.bib]========");
+            System.out.println("[1]-Listar todas as bases");
+            System.out.println("[2]-Importar todas");
+            System.out.println("[3]-Importar específica");
+            System.out.println();
+            System.out.println("[0]-Sair");
+            System.out.println("======================");
+            System.out.print("Escolha uma opção: ");
+            opc = sc.nextInt();
+
+            return opc;
+
+        }while(opc!=0);
+    }
+
 
 
 
