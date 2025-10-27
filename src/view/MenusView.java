@@ -1,5 +1,6 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MenusView {
@@ -75,6 +76,9 @@ public class MenusView {
             System.out.println("[1]-Listar todas as bases");
             System.out.println("[2]-Importar todas");
             System.out.println("[3]-Importar específica");
+            System.out.println("[4]-Bases Importadas");
+            System.out.println("[5]-Remover base específica");
+            System.out.println("[6]-Remover toda a base");
             System.out.println();
             System.out.println("[0]-Sair");
             System.out.println("======================");
@@ -85,6 +89,26 @@ public class MenusView {
 
         }while(opc!=0);
     }
+
+    public String menuDeImportacaoBib3(ArrayList<String> nomesBibs){
+        int opc = -1;
+
+        do{
+            System.out.println("========[.bib]========");
+            for(int i=0; i<nomesBibs.size();i++){
+                System.out.println("["+(i+1)+"]-"+nomesBibs.get(i));
+            }
+            System.out.println();
+            System.out.println("[0]-Sair");
+            System.out.println("======================");
+            System.out.print("Escolha uma opção: ");
+            opc = sc.nextInt();
+
+            return nomesBibs.get(opc-1);
+
+        }while(opc!=0);
+    }
+
 
 
 
