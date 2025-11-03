@@ -1,5 +1,7 @@
 package view;
 
+import model.Query;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -30,15 +32,16 @@ public class MenusView {
         }while(opc!=0);
     }
 
-    public int menuProcessarDados(){
+    public int menuAnalisarDados(){
         int opc = -1;
 
         do{
             System.out.println("========[Analisar Dados]========");
-            System.out.println("[1]-Buscar por Autor");
-            System.out.println("[2]-Buscar por Ano");
-            System.out.println("[3]-Buscar por Título");
-            System.out.println("[4]-Histórico de buscas");
+            System.out.println("[1]-Buscar por Título");
+            System.out.println("[2]-Buscar por Autor");
+            System.out.println("[3]-Buscar por Ano");
+            System.out.println("[4]-Query personalizada");
+            System.out.println("[5]-Histórico de buscas");
             System.out.println();
             System.out.println("[0]-Sair");
             System.out.println("=================================");
@@ -48,6 +51,44 @@ public class MenusView {
             return opc;
 
         }while(opc!=0);
+    }
+
+    public int menuQuery(){
+        int opc = -1;
+
+        do{
+            System.out.println("=========[Query]=========");
+            System.out.println("[1]-Usar query existente");
+            System.out.println("[2]-Criar query");
+            System.out.println();
+            System.out.println("[0]-Sair");
+            System.out.println("=========================");
+            System.out.print("Escolha uma opção: ");
+            opc = sc.nextInt();
+
+            return opc;
+        }while(opc!=0);
+    }
+
+    public Query meuCriarQuery(){
+        sc.nextLine();//LimparScaner
+        ArrayList<String> parametros = new ArrayList<>();
+        System.out.println("=========[Criação]=========");
+        System.out.println("Adicione os parâmetros");
+        System.out.println();
+        System.out.println("[0]-Sair");
+        System.out.println("===========================");
+
+        while(true){
+            System.out.print("[Parametro]: ");
+            String parametro = sc.nextLine();
+            if(parametro.equals("0")){
+                break;
+            }
+            parametros.add(parametro);
+        }
+
+        return new Query(parametros);
     }
 
     public int notificacoesLog(){

@@ -1,18 +1,27 @@
 package servirces;
 
 import model.Bib;
+import observer.LogMeneger;
+import observer.LogObserver;
+import observer.Observer;
+import singleton.ImportadosURL;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BibServices {
+public class BibServices{
     private final String path = "C:\\Users\\Rony\\Desktop\\BibSync\\data\\bibs";
     private String tipo;
     private ArrayList<String> todosBibs;
     private List<String> nomesDosImportados= new ArrayList<>();
+    private List<Observer> observadores = new ArrayList<>();
+
+    LogMeneger manager = new LogMeneger();
+    LogObserver observer = new LogObserver();
 
     public BibServices(String tipo){
+        manager.adicionarObservador(observer);
         switch (tipo.toLowerCase()){
             case "ieee":
                 this.tipo = "IEEE";
@@ -25,12 +34,108 @@ public class BibServices {
 
     public BibServices(){
         this.todosBibs = pegarNomeDosBibs();
+        manager.adicionarObservador(observer);
         try {
-            BufferedReader arquivo = new BufferedReader(new FileReader("C:\\Users\\Rony\\Desktop\\BibSync\\data\\historico\\importados.txt"));
+            BufferedReader arquivo = ImportadosURL.getInstance().getArquivoLer();
             this.nomesDosImportados = new ArrayList<>(arquivo.readAllLines());
             arquivo.close();
         }catch (IOException e){
             System.out.println(e);
+        }
+    }
+
+
+    public List<List<Bib>> importarBibs(){
+        List<List<Bib>> todosBibsMatriz = new ArrayList<>();
+
+        try{
+            BufferedWriter arquivo_historio_importados = ImportadosURL.getInstance().getArquivoEscrever();
+
+            for(int i=0; i<todosBibs.size(); i++){
+                this.tipo = todosBibs.get(i).toString();
+
+                int quanidadeDeLinhas = percorerLinhasBib();
+
+                List<Bib> bibs =  tratarLinhasBib(quanidadeDeLinhas);
+                if(!nomesDosImportados.contains(tipo)){
+                    nomesDosImportados.add(tipo);
+                }
+                todosBibsMatriz.add(bibs);
+
+                arquivo_historio_importados.write(this.tipo);
+                arquivo_historio_importados.newLine();
+            }
+            arquivo_historio_importados.close();
+            manager.notificarObservadores(todosBibs.size()+" Bibs adicionados ");
+        }catch (IOException e){
+            System.out.println(e);
+        }
+
+        return todosBibsMatriz;
+
+    }
+
+    public List<List<Bib>> importarBibs(String arquivoNome){
+        List<List<Bib>> todosBibsMatriz = new ArrayList<>();
+
+        if(this.nomesDosImportados.contains(arquivoNome)){
+            System.out.println("Esse Bib já está importado !");
+            return List.of();
+        }
+
+        try{
+            BufferedWriter arquivo_historio_importados = ImportadosURL.getInstance().getArquivoEscrever();
+
+            this.tipo = arquivoNome;
+
+            int quanidadeDeLinhas = percorerLinhasBib();
+
+            List<Bib> bibs =  tratarLinhasBib(quanidadeDeLinhas);
+            nomesDosImportados.add(tipo);
+            todosBibsMatriz.add(bibs);
+            arquivo_historio_importados.write(this.tipo);
+            arquivo_historio_importados.newLine();
+            arquivo_historio_importados.close();
+
+            manager.notificarObservadores(this.tipo+ " adicionado ");
+        }catch (IOException e){
+            System.out.println(e);
+        }
+
+        return todosBibsMatriz;
+
+    }
+
+    public void removerBib(String nome){
+        List<String> remover = new ArrayList<>();
+
+        try{
+            BufferedWriter arquivo_historio_importados = ImportadosURL.getInstance().getArquivoEscrever();
+
+            for(String n:this.nomesDosImportados){//Logica de remover todos ou só um
+                if(n.equals(nome)){
+                    remover.add(n);
+                }else if(nome.equals(null)) {
+                    remover.add(n);
+                }
+            }
+
+            this.nomesDosImportados.removeAll(remover);
+
+
+            for(String n:this.nomesDosImportados){
+                arquivo_historio_importados.write(n);
+                arquivo_historio_importados.newLine();
+            }
+
+            arquivo_historio_importados.close();
+            manager.notificarObservadores(remover.size()+ " Bib removido ");
+        }catch (IOException e){
+            System.out.println(e);
+        }catch (NullPointerException e){
+            System.out.println("Base removida com sucesso!");
+            this.nomesDosImportados = new ArrayList<>();
+            manager.notificarObservadores(" Todos Bibs Removidos ");
         }
     }
 
@@ -88,96 +193,6 @@ public class BibServices {
         return nomesArtigos;
     }
 
-
-    public List<List<Bib>> importarBibs(){
-        List<List<Bib>> todosBibsMatriz = new ArrayList<>();
-
-        try{
-            BufferedWriter arquivo_historio_importados = new BufferedWriter(new FileWriter("C:\\Users\\Rony\\Desktop\\BibSync\\data\\historico\\importados.txt"));
-
-            for(int i=0; i<todosBibs.size(); i++){
-                this.tipo = todosBibs.get(i).toString();
-
-                int quanidadeDeLinhas = percorerLinhasBib();
-
-                List<Bib> bibs =  tratarLinhasBib(quanidadeDeLinhas);
-                nomesDosImportados.add(tipo);
-                todosBibsMatriz.add(bibs);
-                arquivo_historio_importados.write(this.tipo);
-                arquivo_historio_importados.newLine();
-            }
-
-            arquivo_historio_importados.close();
-        }catch (IOException e){
-            System.out.println(e);
-        }
-
-        return todosBibsMatriz;
-
-    }
-
-    public List<List<Bib>> importarBibs(String arquivoNome){
-        List<List<Bib>> todosBibsMatriz = new ArrayList<>();
-
-        if(this.nomesDosImportados.contains(arquivoNome)){
-            System.out.println("Esse Bib já está importado !");
-            return List.of();
-        }
-
-        try{
-            BufferedWriter arquivo_historio_importados = new BufferedWriter(new FileWriter("C:\\Users\\Rony\\Desktop\\BibSync\\data\\historico\\importados.txt", true));
-
-            this.tipo = arquivoNome;
-
-            int quanidadeDeLinhas = percorerLinhasBib();
-
-            List<Bib> bibs =  tratarLinhasBib(quanidadeDeLinhas);
-            nomesDosImportados.add(tipo);
-            todosBibsMatriz.add(bibs);
-            arquivo_historio_importados.write(this.tipo);
-            arquivo_historio_importados.newLine();
-
-            arquivo_historio_importados.close();
-        }catch (IOException e){
-            System.out.println(e);
-        }
-
-        return todosBibsMatriz;
-
-    }
-
-    public void removerBib(String nome){
-        List<String> remover = new ArrayList<>();
-
-        try{
-            BufferedWriter arquivo_historio_importados = new BufferedWriter(new FileWriter("C:\\Users\\Rony\\Desktop\\BibSync\\data\\historico\\importados.txt"));
-
-            for(String n:this.nomesDosImportados){
-                if(n.equals(nome)){
-                    remover.add(n);
-                }else if(nome.equals(null)) {
-                    remover.add(n);
-                }
-            }
-
-            this.nomesDosImportados.removeAll(remover);
-
-
-            for(String n:this.nomesDosImportados){
-                arquivo_historio_importados.write(n);
-                arquivo_historio_importados.newLine();
-            }
-
-            arquivo_historio_importados.close();
-
-        }catch (IOException e){
-            System.out.println(e);
-        }catch (NullPointerException e){
-            System.out.println("Base removida com sucesso!");
-            this.nomesDosImportados = new ArrayList<>();
-        }
-    }
-
     private int percorerLinhasBib(){
         try{
 
@@ -200,6 +215,7 @@ public class BibServices {
     }
 
     public List<Bib> tratarLinhasBib(int quantidadeLinhas){
+        boolean IEE = false;
         try{
             BufferedReader arquivo = new BufferedReader(new FileReader(path+"\\"+tipo));
 
@@ -215,29 +231,79 @@ public class BibServices {
             String url= "";
 
             for(String b:bibs){
-                if(b.toLowerCase().contains("author")){
-                    autor = b;
-                }else if(b.toLowerCase().contains("booktitle")){
-                    titulo = b;
-                }else if(b.toLowerCase().contains("year")){
-                    ano = b;
-                }else if(b.toLowerCase().contains("abstract")){
-                    resumo = b;
-                }else if(b.toLowerCase().contains("doi")){
-                    doi = b;
-                }else if(b.toLowerCase().contains("url")){
-                    url = b;
+
+                String regex = "\\{([^}]*)\\}";
+                java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(regex);
+                java.util.regex.Matcher matcher = pattern.matcher(b);
+
+                if(matcher.find()){
+                    if(b.toLowerCase().contains("author")){
+                        autor = matcher.group(1);
+                    }else if(b.toLowerCase().contains("booktitle") || b.toLowerCase().contains("title")){
+                        if(b.toLowerCase().contains("booktitle")){
+                            IEE = true;
+                        }
+                        titulo = matcher.group(1);
+                    }else if(b.toLowerCase().contains("year")){
+                        ano = matcher.group(1);
+                    }else if(b.toLowerCase().contains("abstract")){
+                        resumo = matcher.group(1);
+                    }else if(b.toLowerCase().contains("doi")){
+                        doi = matcher.group(1);
+                    }else if(b.toLowerCase().contains("url")){
+                        url = matcher.group(1);
+                        if(IEE){
+                            Bib artigo = new Bib(titulo, ano, autor, resumo, doi,url);
+                            artigosEncontrados.add(artigo);
+                        }
+                    }
                 }
 
-                Bib artigo = new Bib(titulo, ano, autor, resumo, doi,url);
-                artigosEncontrados.add(artigo);
+                if(b.equals("}")){
+                    Bib artigo = new Bib(titulo, ano, autor, resumo, doi,url);
+                    artigosEncontrados.add(artigo);
+                }
             }
-           return artigosEncontrados;
+            return artigosEncontrados;
 
         }catch (IOException e){
             System.out.println("Erro ao ler as linhas "+e);
         }
 
         return List.of();
+    }
+
+
+    public void procurarBib(int value, String string){
+        ArrayList<Bib> artigosEncontrados = new ArrayList<>();
+        for(String nome:nomesDosImportados){
+            this.tipo = nome;
+            int quantidadeLinhas = percorerLinhasBib();
+
+            List<Bib> bibsTratados = tratarLinhasBib(quantidadeLinhas);
+            String query="";
+            for(Bib artigo: bibsTratados){
+                switch (value){
+                    case 1:
+                        query =  artigo.getTitulo();
+                        break;
+                    case 2:
+                        query = artigo.getAutor();
+                        break;
+                    case 3:
+                        query = artigo.getAno();
+                        break;
+                }
+
+                if(query.toLowerCase().contains(string.toLowerCase())){
+                    artigosEncontrados.add(artigo);
+                }
+            }
+        }
+
+        for(Bib b:artigosEncontrados){
+            System.out.println(b);
+        }
+
     }
 }

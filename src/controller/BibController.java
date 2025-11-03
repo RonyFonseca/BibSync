@@ -1,6 +1,7 @@
 package controller;
 
 import model.Bib;
+import model.Query;
 import servirces.BibServices;
 import view.MenusView;
 
@@ -9,32 +10,33 @@ import java.util.List;
 
 public class BibController {
     private MenusView menus = new MenusView();
-    private BibServices services = new BibServices();
+    private BibServices bibServices = new BibServices();
     private List<List<Bib>> importados;
-    //Persistência de dados;
 
     public void importacaoDaBase(){
         int opc =-1;
         do{
             opc = menus.menuDeImportacaoBib();
             switch (opc){
+                case 0:
+                    break;
                 case 1:
-                    ArrayList<String> nomes = services.listarBibs();
+                    ArrayList<String> nomes = bibServices.listarBibs();
                     System.out.println("Bibs encontrados:");
                     for(String n: nomes){
                         System.out.println(n);
                     }
                     break;
                 case 2:
-                    this.importados =  services.importarBibs();
+                    this.importados =  bibServices.importarBibs();
                     break;
                 case 3:
-                    String nomesEspecifico = menus.menuDeImportacaoBib3(services.listarBibs());
-                    this.importados = services.importarBibs(nomesEspecifico);
+                    String nomesEspecifico = menus.menuDeImportacaoBib3(bibServices.listarBibs());
+                    this.importados = bibServices.importarBibs(nomesEspecifico);
                     break;
                 case 4:
                     try{
-                        for(String nome: services.identificarImportados()){
+                        for(String nome: bibServices.identificarImportados()){
                             System.out.println(nome+"-[importado]");
                         }
                     }catch (NullPointerException e){
@@ -42,13 +44,31 @@ public class BibController {
                     }
                     break;
                 case 5:
-                    nomesEspecifico = menus.menuDeImportacaoBib3(services.identificarImportados());
-                    services.removerBib(nomesEspecifico);
+                    nomesEspecifico = menus.menuDeImportacaoBib3(bibServices.identificarImportados());
+                    bibServices.removerBib(nomesEspecifico);
                     break;
                 case 6:
-                    services.removerBib(null);
+                    bibServices.removerBib(null);
                     break;
+                default:
+                    System.out.println("Opção inválida !");
             }
         }while (opc!=0);
+    }
+
+    public void analisarDados(){
+        int opc = -1;
+        do{
+            opc = menus.menuAnalisarDados();
+            switch (opc){
+                case 4:
+                    opc = menus.menuQuery();
+                    Query query = menus.meuCriarQuery();
+                    //QueryService
+                    break;
+                default:
+                    System.out.println("Opção inválida !");
+            }
+        }while(opc!=0);
     }
 }
