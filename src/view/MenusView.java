@@ -53,30 +53,36 @@ public class MenusView {
         }while(opc!=0);
     }
 
-    public int menuQuery(){
+    public int menuQuery(ArrayList<String> querys){
         int opc = -1;
 
         do{
             System.out.println("=========[Query]=========");
-            System.out.println("[1]-Usar query existente");
-            System.out.println("[2]-Criar query");
+
+            for(int i=0; i<querys.size(); i++){
+                System.out.println("["+i+"]"+ querys.get(i));
+            }
             System.out.println();
-            System.out.println("[0]-Sair");
+            System.out.println("-------------------------");
+            System.out.println("["+(querys.size())+"]"+"-Remover query");
+            System.out.println("["+(querys.size()+1)+"]"+"-Criar query");
+            System.out.println("-------------------------");
+            System.out.println();
+            System.out.println("[0.1]-Sair");
             System.out.println("=========================");
             System.out.print("Escolha uma opção: ");
             opc = sc.nextInt();
 
             return opc;
-        }while(opc!=0);
+        }while(opc!=0.1);
     }
 
-    public Query meuCriarQuery(){
+    public Query menuCriarQuery(){
         sc.nextLine();//LimparScaner
         ArrayList<String> parametros = new ArrayList<>();
         System.out.println("=========[Criação]=========");
         System.out.println("Adicione os parâmetros");
         System.out.println();
-        System.out.println("[0]-Sair");
         System.out.println("===========================");
 
         while(true){
@@ -89,6 +95,33 @@ public class MenusView {
         }
 
         return new Query(parametros);
+    }
+
+    public int menuRemoverQuery(ArrayList<String> querys){
+        sc.nextLine();//LimparScaner
+        ArrayList<String> parametros = new ArrayList<>();
+        System.out.println("=========[Remoção]=========");
+        for(int i=0; i<querys.size(); i++){
+            System.out.println("["+i+"]"+ querys.get(i));
+        }
+        System.out.println();
+        System.out.println("[0]-Sair");
+        System.out.println("===========================");
+        System.out.print("Selecione a query: ");
+        int opc = sc.nextInt();
+
+
+        return opc;
+    }
+
+
+
+    public String menuBuscar(String oqueBuscar){
+        sc.nextLine();
+        System.out.println("===============");
+        System.out.print("Digite seu "+oqueBuscar+": ");
+        String opc = sc.nextLine();
+        return opc;
     }
 
     public int notificacoesLog(){

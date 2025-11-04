@@ -3,6 +3,7 @@ package controller;
 import model.Bib;
 import model.Query;
 import servirces.BibServices;
+import servirces.QueryServices;
 import view.MenusView;
 
 import java.util.ArrayList;
@@ -61,14 +62,41 @@ public class BibController {
         do{
             opc = menus.menuAnalisarDados();
             switch (opc){
+                case 1:
+                    String titulo = menus.menuBuscar("titulo");
+                    bibServices.procurarBib(1, titulo.toLowerCase());
+                    break;
+                case 2:
+                    String autor = menus.menuBuscar("autor");
+                    bibServices.procurarBib(2, autor.toLowerCase());
+                    break;
+                case 3:
+                    String ano = menus.menuBuscar("ano");
+                    bibServices.procurarBib(3, ano.toLowerCase());
+                    break;
                 case 4:
-                    opc = menus.menuQuery();
-                    Query query = menus.meuCriarQuery();
-                    //QueryService
+                    QueryServices queryServices = new QueryServices();
+                    ArrayList<String> querys = queryServices.pegarQuerysSalvas();
+                    opc = menus.menuQuery(querys);
+
+                    if(opc!=(querys.size()+1) && opc!=querys.size()){
+                        String[] converterParaArray = querys.get(opc).split("],");
+
+                        queryServices.pesquisarArtigoPorQuery(converterParaArray);
+                    }
+
+                    if(opc==(querys.size()+1)){
+                        Query query = menus.menuCriarQuery();
+                        queryServices.salvarQuery(query.getParametros());
+                    } else if (opc==querys.size()){
+                        opc = menus.menuRemoverQuery(querys);
+                        queryServices.removerQuery(opc);
+                    }
+
                     break;
                 default:
                     System.out.println("Opção inválida !");
             }
-        }while(opc!=0);
+        }while(opc!=0.1);
     }
 }

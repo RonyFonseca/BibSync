@@ -273,7 +273,6 @@ public class BibServices{
         return List.of();
     }
 
-
     public void procurarBib(int value, String string){
         ArrayList<Bib> artigosEncontrados = new ArrayList<>();
         for(String nome:nomesDosImportados){
@@ -292,6 +291,9 @@ public class BibServices{
                         break;
                     case 3:
                         query = artigo.getAno();
+                        break;
+                    case 4:
+                        query = artigo.getResumo();
                         break;
                 }
 

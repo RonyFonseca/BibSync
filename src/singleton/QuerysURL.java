@@ -2,14 +2,14 @@ package singleton;
 
 import java.io.*;
 
-public class ImportadosURL {
-    private static ImportadosURL unicainstancia;
+public class QuerysURL {
+    private static QuerysURL unicainstancia;
     private BufferedReader arquivoLer;
     private BufferedWriter arquivoEscrever;
 
-    private String caminho = "C:\\Users\\Rony\\Desktop\\BibSync\\data\\historico\\importados.txt";
+    private String caminho = "C:\\Users\\Rony\\Desktop\\BibSync\\data\\historico\\querys.txt";
 
-    private ImportadosURL(){
+    private QuerysURL(){
         try{
             File file = new File(caminho);
             if (!file.exists()) {
@@ -20,9 +20,9 @@ public class ImportadosURL {
         }
     }
 
-    public static ImportadosURL getInstance(){
+    public static QuerysURL getInstance(){
         if(unicainstancia==null){
-            unicainstancia = new ImportadosURL();
+            unicainstancia = new QuerysURL();
         }
         return unicainstancia;
     }
