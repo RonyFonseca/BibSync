@@ -5,7 +5,6 @@ import java.io.*;
 public class LogServicos {
 
     private String caminhoLog = "C:\\Users\\PROFESSOR\\IdeaProjects\\BibSync\\data\\logs\\logs.txt";
-
     
     public void visualizarLogs() {
         System.out.println("\n========[ Visualizar Logs ]========");
@@ -26,4 +25,16 @@ public class LogServicos {
         }
         System.out.println("=====================================\n");
     }
+
+    public void limparLogs() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminhoLog, false))) {
+            // Abrir e fechar o FileWriter no modo não-append (false) apaga o conteúdo.
+            writer.write("");
+            System.out.println("\nHistórico de logs limpo com sucesso.\n");
+        } catch (IOException e) {
+            System.out.println("Erro ao limpar o arquivo de log: " + e.getMessage());
+        }
+    }
 }
+
+
