@@ -98,6 +98,6 @@ public class BibController {
                 default:
                     System.out.println("Opção inválida !");
             }
-        }while(opc!=0.1);
+        }while(opc!= 0);
     }
 }
