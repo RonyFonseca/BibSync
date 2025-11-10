@@ -1,5 +1,6 @@
 package controller;
 
+import servirces.LogServicos;
 import model.Bib;
 import model.Query;
 import servirces.BibServices;
@@ -12,6 +13,7 @@ import java.util.List;
 public class BibController {
     private MenusView menus = new MenusView();
     private BibServices bibServices = new BibServices();
+    private LogServicos logServicos = new LogServicos();
     private List<List<Bib>> importados;
 
     public void importacaoDaBase(){
@@ -55,6 +57,24 @@ public class BibController {
                     System.out.println("Opção inválida !");
             }
         }while (opc!=0);
+    }
+    public void gerenciarLogs() {
+        int opc = -1;
+        do {
+            opc = menus.notificacoesLog();
+            switch (opc) {
+                case 0:
+                    break; 
+                case 1:
+                    logServicos.visualizarLogs();
+                    break;
+                case 2:
+                    logServicos.limparLogs();
+                    break;
+                default:
+                    System.out.println("Opção inválida !");
+            }
+        } while (opc != 0);
     }
 
     public void analisarDados(){
