@@ -73,6 +73,18 @@ public class QueryServices {
         bibServices.procurarBib(4, queryTratada.toLowerCase());
     }
 
+    public void mostrarHistoricoQuerys() {
+        System.out.println("\n=========[ Histórico de Buscas (Querys) ]=========");
+        if (queryBusca.isEmpty()) {
+            System.out.println("Nenhuma query salva no histórico.");
+        } else {
+            for (String query : queryBusca) {
+                System.out.println(query);
+            }
+        }
+        System.out.println("===================================================\n");
+    }
+
     public ArrayList pegarQuerysSalvas (){
         return this.queryBusca;
     }

@@ -59,6 +59,7 @@ public class BibController {
 
     public void analisarDados(){
         int opc = -1;
+        QueryServices queryServices = new QueryServices();
         do{
             opc = menus.menuAnalisarDados();
             switch (opc){
@@ -75,7 +76,6 @@ public class BibController {
                     bibServices.procurarBib(3, ano.toLowerCase());
                     break;
                 case 4:
-                    QueryServices queryServices = new QueryServices();
                     ArrayList<String> querys = queryServices.pegarQuerysSalvas();
                     opc = menus.menuQuery(querys);
 
@@ -92,7 +92,8 @@ public class BibController {
                         opc = menus.menuRemoverQuery(querys);
                         queryServices.removerQuery(opc);
                     }
-
+                case 5:
+                    queryServices.mostrarHistoricoQuerys();
                     break;
                 default:
                     System.out.println("Opção inválida !");
