@@ -167,8 +167,16 @@ public class MenusView {
     public String menuDeImportacaoBib3(ArrayList<String> nomesBibs){
         int opc = -1;
 
-        do{
+        while(true){
             System.out.println("========[.bib]========");
+            if(nomesBibs.isEmpty()){
+                System.out.println();
+                System.out.println("[0]-Sair");
+                System.out.println("======================");
+                System.out.print("Escolha uma opção: ");
+                opc = sc.nextInt();
+                return null;
+            }
             for(int i=0; i<nomesBibs.size();i++){
                 System.out.println("["+(i+1)+"]-"+nomesBibs.get(i));
             }
@@ -178,9 +186,17 @@ public class MenusView {
             System.out.print("Escolha uma opção: ");
             opc = sc.nextInt();
 
-            return nomesBibs.get(opc-1);
+            if (opc == 0) {
+                return null;
+            }
 
-        }while(opc!=0);
+            if (opc > 0 && opc <= nomesBibs.size()) {
+                return nomesBibs.get(opc-1);
+            } else {
+
+                System.out.println("Opção inválida! Tente novamente.");
+            }
+        }
     }
 
 

@@ -35,7 +35,9 @@ public class BibController {
                     break;
                 case 3:
                     String nomesEspecifico = menus.menuDeImportacaoBib3(bibServices.listarBibs());
-                    this.importados = bibServices.importarBibs(nomesEspecifico);
+                    if(nomesEspecifico != null){
+                        this.importados = bibServices.importarBibs(nomesEspecifico);
+                    }
                     break;
                 case 4:
                     try{
@@ -47,8 +49,11 @@ public class BibController {
                     }
                     break;
                 case 5:
+
                     nomesEspecifico = menus.menuDeImportacaoBib3(bibServices.identificarImportados());
-                    bibServices.removerBib(nomesEspecifico);
+                    if(nomesEspecifico != null){
+                        bibServices.removerBib(nomesEspecifico);
+                    }
                     break;
                 case 6:
                     bibServices.removerBib(null);
@@ -64,7 +69,7 @@ public class BibController {
             opc = menus.notificacoesLog();
             switch (opc) {
                 case 0:
-                    break; 
+                    break;      
                 case 1:
                     logServicos.visualizarLogs();
                     break;
