@@ -6,7 +6,9 @@ import servirces.BibServices;
 import java.util.List;
 
 public interface Factory {
+    String nome = "";
     BibServices services = null;
-    List<List<Bib>> lerArquivo();
+    List<Factory> lerArquivo();
+    String getNome();
     String getFonte();
 }

@@ -6,13 +6,25 @@ import servirces.BibServices;
 import java.util.List;
 
 public class FactoryIEEE implements Factory {
-    BibServices bibservices = new BibServices("IEEE");
+    BibServices bibservices = new BibServices();
+    public String nome;
+
+    public FactoryIEEE(String nome){
+        this.nome = nome;
+    }
+
+    public FactoryIEEE(){}
 
     @Override
-    public List<List<Bib>> lerArquivo() {
-        System.out.println("Lendo arquivo da IEEE");
-        List<List<Bib>> artigos = bibservices.importarBibs();
+    public List<Factory> lerArquivo() {
+        System.out.println(nome);
+        List<Factory> artigos = bibservices.importarBibs();
         return artigos;
+    }
+
+    @Override
+    public String getNome() {
+        return nome;
     }
 
     @Override

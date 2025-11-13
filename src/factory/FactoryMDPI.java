@@ -8,12 +8,24 @@ import java.util.List;
 
 public class FactoryMDPI implements Factory {
     BibServices bibservices = new BibServices("mdpi");
+    public String nome;
+
+    public FactoryMDPI(String nome){
+        this.nome = nome;
+    }
+
+    public FactoryMDPI(){}
 
     @Override
-    public List<List<Bib>> lerArquivo() {
+    public List<Factory> lerArquivo() {
         System.out.println("Lendo arquivo MDPI");
-        List<List<Bib>> artigos = bibservices.importarBibs();
+        List<Factory> artigos = bibservices.importarBibs();
         return artigos;
+    }
+
+    @Override
+    public String getNome() {
+        return nome;
     }
 
     @Override

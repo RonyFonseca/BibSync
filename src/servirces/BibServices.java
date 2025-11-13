@@ -1,17 +1,22 @@
 package servirces;
 
+import factory.BibFactory;
+import factory.Factory;
+import factory.FactoryIEEE;
+import factory.FactoryMDPI;
 import model.Bib;
 import observer.LogMeneger;
 import observer.LogObserver;
 import observer.Observer;
 import singleton.ImportadosURL;
+import strategy.*;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BibServices{
-    private final String path = "C:\\Users\\Rony\\Desktop\\BibSync\\data\\bibs";
+    private final String path = "C:\\Users\\ronyf\\OneDrive\\Área de Trabalho\\BibSync\\data\\bibs";
     private String tipo;
     private ArrayList<String> todosBibs;
     private List<String> nomesDosImportados= new ArrayList<>();
@@ -45,8 +50,8 @@ public class BibServices{
     }
 
 
-    public List<List<Bib>> importarBibs(){
-        List<List<Bib>> todosBibsMatriz = new ArrayList<>();
+    public List<Factory> importarBibs(){
+        List<Factory> bibsFactory = new ArrayList<>();
 
         try{
             BufferedWriter arquivo_historio_importados = ImportadosURL.getInstance().getArquivoEscrever();
@@ -54,19 +59,51 @@ public class BibServices{
             for(int i=0; i<todosBibs.size(); i++){
                 this.tipo = todosBibs.get(i).toString();
 
-                int quanidadeDeLinhas = percorerLinhasBib();
-
-                List<Bib> bibs =  tratarLinhasBib(quanidadeDeLinhas);
                 if(!nomesDosImportados.contains(tipo)){
                     nomesDosImportados.add(tipo);
                 }
-                todosBibsMatriz.add(bibs);
+
+                String tipo = analisadorDeTipo(todosBibs.get(i).toString());
+                Factory factory = BibFactory.criarBib(tipo, todosBibs.get(i).toString());
+
+                bibsFactory.add(factory);
 
                 arquivo_historio_importados.write(this.tipo);
                 arquivo_historio_importados.newLine();
             }
+
             arquivo_historio_importados.close();
             manager.notificarObservadores(todosBibs.size()+" Bibs adicionados ");
+        }catch (IOException e){
+            System.out.println(e);
+        }
+
+        return bibsFactory;
+
+    }
+
+    public List<Factory> importarBibs(Factory bib){
+        List<Factory> todosBibsMatriz = new ArrayList<>();
+
+        if(this.nomesDosImportados.contains(bib.getNome())){
+            System.out.println("Esse Bib já está importado !");
+            return List.of();
+        }
+
+        try{
+            BufferedWriter arquivo_historio_importados = ImportadosURL.getInstance().getArquivoEscrever();
+
+            this.tipo = bib.getNome();
+
+            nomesDosImportados.add(tipo);
+
+            String tipoDoBib = analisadorDeTipo(bib.getNome());
+            todosBibsMatriz.add(bib);
+            arquivo_historio_importados.write(this.tipo);
+            arquivo_historio_importados.newLine();
+            arquivo_historio_importados.close();
+
+            manager.notificarObservadores(this.tipo+ " adicionado - "+tipoDoBib);
         }catch (IOException e){
             System.out.println(e);
         }
@@ -75,35 +112,13 @@ public class BibServices{
 
     }
 
-    public List<List<Bib>> importarBibs(String arquivoNome){
-        List<List<Bib>> todosBibsMatriz = new ArrayList<>();
 
-        if(this.nomesDosImportados.contains(arquivoNome)){
-            System.out.println("Esse Bib já está importado !");
-            return List.of();
+    public String analisadorDeTipo(String arquivo){
+        if(arquivo.contains("IEEE")){
+            return "IEEE";
+        }else{
+            return "MDPI";
         }
-
-        try{
-            BufferedWriter arquivo_historio_importados = ImportadosURL.getInstance().getArquivoEscrever();
-
-            this.tipo = arquivoNome;
-
-            int quanidadeDeLinhas = percorerLinhasBib();
-
-            List<Bib> bibs =  tratarLinhasBib(quanidadeDeLinhas);
-            nomesDosImportados.add(tipo);
-            todosBibsMatriz.add(bibs);
-            arquivo_historio_importados.write(this.tipo);
-            arquivo_historio_importados.newLine();
-            arquivo_historio_importados.close();
-
-            manager.notificarObservadores(this.tipo+ " adicionado ");
-        }catch (IOException e){
-            System.out.println(e);
-        }
-
-        return todosBibsMatriz;
-
     }
 
     public void removerBib(String nome){
@@ -139,16 +154,18 @@ public class BibServices{
         }
     }
 
-    public ArrayList<String> listarBibs(){
+    public List<Factory> listarBibs(){
         File pasta = new File(path);
-        ArrayList<String> nomesBibs = new ArrayList<>();
+        List<Factory> nomesBibs = new ArrayList<>();
 
         if(pasta.exists() && pasta.isDirectory()){
             File[] arquivos = pasta.listFiles((dir, name) -> name.endsWith(".bib"));
 
             if(arquivos != null && arquivos.length > 0){
                 for (File arquivo : arquivos) {
-                    nomesBibs.add(arquivo.getName());
+                    String tipo = analisadorDeTipo(arquivo.getName());
+                    Factory factory = BibFactory.criarBib(tipo, arquivo.getName());
+                    nomesBibs.add(factory);
                 }
             }else {
                 System.out.println("Nenhum arquivo .bib encontrado");
@@ -160,17 +177,19 @@ public class BibServices{
         return nomesBibs;
     }
 
-    public ArrayList<String> identificarImportados(){
+    public List<Factory> identificarImportados(){
         File pasta = new File(path);
 
         File[] arquivos = pasta.listFiles((dir, name) -> name.endsWith(".bib"));
 
-        ArrayList<String> importados = new ArrayList<>();
+        List<Factory> importados = new ArrayList<>();
 
         for (int i=0; i<arquivos.length; i++) {
             for(int j=0; j<this.nomesDosImportados.size(); j++){
                 if(arquivos[i].getName().equals(this.nomesDosImportados.get(j))){
-                    importados.add(arquivos[i].getName());
+                    String tipo =analisadorDeTipo(arquivos[i].getName());
+                    Factory factory = BibFactory.criarBib(tipo, arquivos[i].getName());
+                    importados.add(factory);
                 }
             }
         }
@@ -275,37 +294,31 @@ public class BibServices{
 
     public void procurarBib(int value, String string){
         ArrayList<Bib> artigosEncontrados = new ArrayList<>();
+
         for(String nome:nomesDosImportados){
             this.tipo = nome;
             int quantidadeLinhas = percorerLinhasBib();
 
             List<Bib> bibsTratados = tratarLinhasBib(quantidadeLinhas);
-            String query="";
-            for(Bib artigo: bibsTratados){
-                switch (value){
-                    case 1:
-                        query =  artigo.getTitulo();
-                        break;
-                    case 2:
-                        query = artigo.getAutor();
-                        break;
-                    case 3:
-                        query = artigo.getAno();
-                        break;
-                    case 4:
-                        query = artigo.getResumo();
-                        break;
-                }
+            FilterStrategy filtro = new FilterStrategy();
 
-                if(query.toLowerCase().contains(string.toLowerCase())){
-                    artigosEncontrados.add(artigo);
-                }
+            switch (value){
+                case 1:
+                    filtro.setStrategy(new FilterTitulo(string));
+                    break;
+                case 2:
+                    filtro.setStrategy(new FilterAutor(string));
+                    break;
+                case 3:
+                    filtro.setStrategy(new FilterAno(string));
+                    break;
+                case 4:
+                    filtro.setStrategy(new FilterResumo(string));
+                    break;
             }
+            filtro.filtrar(bibsTratados);
         }
 
-        for(Bib b:artigosEncontrados){
-            System.out.println(b);
-        }
 
     }
 }

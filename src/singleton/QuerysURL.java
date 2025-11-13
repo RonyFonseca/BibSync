@@ -7,7 +7,7 @@ public class QuerysURL {
     private BufferedReader arquivoLer;
     private BufferedWriter arquivoEscrever;
 
-    private String caminho = "C:\\Users\\Rony\\Desktop\\BibSync\\data\\historico\\querys.txt";
+    private String caminho = "C:\\Users\\ronyf\\OneDrive\\Área de Trabalho\\BibSync\\data\\historico\\querys.txt";
 
     private QuerysURL(){
         try{

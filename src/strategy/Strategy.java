@@ -1,7 +1,9 @@
 package strategy;
+import model.Bib;
+import java.util.ArrayList;
+import java.util.List;
 
-import factory.Factory;
 
 public interface Strategy {
-    Factory criarBib();
+    void filtrar(List<Bib> bibs);
 }

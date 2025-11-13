@@ -1,5 +1,6 @@
 package controller;
 
+import factory.Factory;
 import servirces.LogServicos;
 import model.Bib;
 import model.Query;
@@ -14,7 +15,7 @@ public class BibController {
     private MenusView menus = new MenusView();
     private BibServices bibServices = new BibServices();
     private LogServicos logServicos = new LogServicos();
-    private List<List<Bib>> importados;
+    private List<Factory> importados;
 
     public void importacaoDaBase(){
         int opc =-1;
@@ -24,35 +25,35 @@ public class BibController {
                 case 0:
                     break;
                 case 1:
-                    ArrayList<String> nomes = bibServices.listarBibs();
+                    List<Factory> nomes = bibServices.listarBibs();
                     System.out.println("Bibs encontrados:");
-                    for(String n: nomes){
-                        System.out.println(n);
+                    for(Factory n: nomes){
+                        System.out.println(n.getNome());
                     }
                     break;
                 case 2:
                     this.importados =  bibServices.importarBibs();
                     break;
                 case 3:
-                    String nomesEspecifico = menus.menuDeImportacaoBib3(bibServices.listarBibs());
+                    Factory nomesEspecifico = menus.menuDeImportacaoBib3(bibServices.listarBibs());
                     if(nomesEspecifico != null){
                         this.importados = bibServices.importarBibs(nomesEspecifico);
                     }
                     break;
                 case 4:
                     try{
-                        for(String nome: bibServices.identificarImportados()){
-                            System.out.println(nome+"-[importado]");
+                        bibServices.identificarImportados();
+                        for(Factory bib: bibServices.identificarImportados()){
+                            System.out.println(bib.getNome()+"-[importado]-[TIPO]:"+bib.getFonte());
                         }
                     }catch (NullPointerException e){
                         System.out.println("Você ainda não importou nem uma base.");
                     }
                     break;
                 case 5:
-
-                    nomesEspecifico = menus.menuDeImportacaoBib3(bibServices.identificarImportados());
-                    if(nomesEspecifico != null){
-                        bibServices.removerBib(nomesEspecifico);
+                    Factory bib = menus.menuDeImportacaoBib3(bibServices.identificarImportados());
+                    if(bib != null){
+                        bibServices.removerBib(bib.getNome());
                     }
                     break;
                 case 6:

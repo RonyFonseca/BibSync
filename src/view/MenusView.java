@@ -1,8 +1,10 @@
 package view;
 
+import factory.Factory;
 import model.Query;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MenusView {
@@ -164,12 +166,12 @@ public class MenusView {
         }while(opc!=0);
     }
 
-    public String menuDeImportacaoBib3(ArrayList<String> nomesBibs){
+    public Factory menuDeImportacaoBib3(List<Factory> bibs){
         int opc = -1;
 
         while(true){
             System.out.println("========[.bib]========");
-            if(nomesBibs.isEmpty()){
+            if(bibs.isEmpty()){
                 System.out.println();
                 System.out.println("[0]-Sair");
                 System.out.println("======================");
@@ -177,8 +179,8 @@ public class MenusView {
                 opc = sc.nextInt();
                 return null;
             }
-            for(int i=0; i<nomesBibs.size();i++){
-                System.out.println("["+(i+1)+"]-"+nomesBibs.get(i));
+            for(int i=0; i<bibs.size();i++){
+                System.out.println("["+(i+1)+"]-"+bibs.get(i).getNome()+"-"+bibs.get(i).getFonte());
             }
             System.out.println();
             System.out.println("[0]-Sair");
@@ -190,8 +192,8 @@ public class MenusView {
                 return null;
             }
 
-            if (opc > 0 && opc <= nomesBibs.size()) {
-                return nomesBibs.get(opc-1);
+            if (opc > 0 && opc <= bibs.size()) {
+                return bibs.get(opc-1);
             } else {
 
                 System.out.println("Opção inválida! Tente novamente.");
