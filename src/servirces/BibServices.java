@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BibServices{
-    private final String path = "C:\\Users\\ronyf\\OneDrive\\Área de Trabalho\\BibSync\\data\\bibs";
+    private final String path = "data/bibs";
     private String tipo;
     private ArrayList<String> todosBibs;
     private List<String> nomesDosImportados= new ArrayList<>();
@@ -42,7 +42,11 @@ public class BibServices{
         manager.adicionarObservador(observer);
         try {
             BufferedReader arquivo = ImportadosURL.getInstance().getArquivoLer();
-            this.nomesDosImportados = new ArrayList<>(arquivo.readAllLines());
+            this.nomesDosImportados = new ArrayList<>();
+            String linha;
+            while ((linha = arquivo.readLine()) != null) {
+                this.nomesDosImportados.add(linha);
+            }
             arquivo.close();
         }catch (IOException e){
             System.out.println(e);
@@ -238,7 +242,11 @@ public class BibServices{
         try{
             BufferedReader arquivo = new BufferedReader(new FileReader(path+"\\"+tipo));
 
-            List<String> bibs = arquivo.readAllLines();
+            List<String> bibs = new ArrayList<>();
+            String linha;
+            while ((linha = arquivo.readLine()) != null) {
+                bibs.add(linha);
+            }
 
             List<Bib> artigosEncontrados = new ArrayList<>();
 

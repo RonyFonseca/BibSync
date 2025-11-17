@@ -4,7 +4,7 @@ import java.io.*;
 
 public class LogServicos {
 
-    private String caminhoLog = "C:\\Users\\PROFESSOR\\IdeaProjects\\BibSync\\data\\logs\\logs.txt";
+    private String caminhoLog = "data/logs/logs.txt";
     
     public void visualizarLogs() {
         System.out.println("\n========[ Visualizar Logs ]========");

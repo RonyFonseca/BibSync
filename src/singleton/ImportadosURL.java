@@ -7,7 +7,7 @@ public class ImportadosURL {
     private BufferedReader arquivoLer;
     private BufferedWriter arquivoEscrever;
 
-    private String caminho = "C:\\Users\\ronyf\\OneDrive\\Área de Trabalho\\BibSync\\data\\historico\\importados.txt";
+    private String caminho = "data/historico/importados.txt";
 
     private ImportadosURL(){
         try{
