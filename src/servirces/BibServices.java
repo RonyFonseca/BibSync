@@ -301,7 +301,6 @@ public class BibServices{
     }
 
     public void procurarBib(int value, String string){
-        ArrayList<Bib> artigosEncontrados = new ArrayList<>();
 
         for(String nome:nomesDosImportados){
             this.tipo = nome;

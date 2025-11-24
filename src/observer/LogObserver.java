@@ -11,7 +11,7 @@ public class LogObserver implements Observer{
     @Override
     public void atualizar(String msg) {
         try {
-            BufferedWriter arquivo = new BufferedWriter(new FileWriter("C:\\Users\\ronyf\\OneDrive\\Área de Trabalho\\BibSync\\data\\logs\\logs.txt",true));
+            BufferedWriter arquivo = new BufferedWriter(new FileWriter("data/logs/logs.txt",true));
             arquivo.write("LOG# "+msg+" : "+horaAtual()+"\n");
             arquivo.close();
         } catch (IOException e) {
