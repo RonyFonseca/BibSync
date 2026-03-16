@@ -7,6 +7,7 @@ import singleton.QuerysURL;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class QueryServices {
@@ -55,22 +56,7 @@ public class QueryServices {
     }
 
     public void pesquisarArtigoPorQuery(String[] query){
-
-        String queryTratada ="";
-        if(query[0].contains("[")){
-            int inicio = query[0].indexOf("[");
-            int fim = query[0].indexOf("]");
-
-            if (inicio != -1 && fim != -1 && fim > inicio) {
-                queryTratada = query[0].substring(inicio + 1, fim);
-            }
-        }else {
-            queryTratada = query[0];
-        }
-
-
-
-        bibServices.procurarBib(4, queryTratada.toLowerCase());
+        bibServices.procurarBib(4, Arrays.toString(query));
     }
 
     public void mostrarHistoricoQuerys() {

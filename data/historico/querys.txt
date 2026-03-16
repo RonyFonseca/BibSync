@@ -1,6 +1,1 @@
-[Machine, Learning, Solar, Forecast]
-[Machine, Learning, Solar]
-[Solar]
 [Solar, Machine]
-[Solar, Machine, Learning]
-[Solar, generation]
